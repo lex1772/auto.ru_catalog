@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Каталог автомобилей auto.ru</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Каталог автомобилей auto.ru</h1>
+        <form action="" method="get">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="brand">Марка:</label>
+                <select name="brand" id="brand" class="form-control">
+                    <option value="" selected disabled>----</option>
+                    {% for brand in brands %}
+                        <option value="{{ brand.name }}">{{ brand.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Показать модели</button>
+        </form>
+
+        {% if models %}
+            <h2>Модели:</h2>
+            <ul>
+                {% for model in models %}
+                    <li>{{ model.name }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <button class="btn btn-primary" onclick="updateCatalog()">Обновить каталог</button>
+
+    <script>
+        function updateCatalog() {
+            fetch('/update_catalog')
+                .then(response => {
+                    if (response.ok) {
+                        alert('Каталог моделей успешно обновлен');
+                    } else {
+                        alert('Ошибка при обновлении каталога моделей');
+                    }
+                })
+                .catch(error => {
+                    console.error('Произошла ошибка:', error);
+                });
+        }
+    </script>
+</body>
+</html>
